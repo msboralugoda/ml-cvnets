@@ -19,10 +19,10 @@ pycocotools
 cityscapesscripts
 
 # added as a dependency to reproduce 3rd party models
-pytorchvideo
+#pytorchvideo
 
 # PyAV for video decoding
-av
+#av
 
 # FVCore for FLOP calculation
 fvcore
