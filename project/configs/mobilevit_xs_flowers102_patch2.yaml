@@ -1,0 +1,93 @@
+taskname: 'Flowers-102 fine-tune: MobileViT-XS patch=2'
+common:
+  run_label: "flowers102_patch2"
+  log_freq: 20
+  auto_resume: true
+  mixed_precision: true
+  results_loc: "project/results/flowers102_patch2"
+dataset:
+  root_train: "project/data/flowers102/train"
+  root_val: "project/data/flowers102/val"
+  name: "imagenet"
+  category: "classification"
+  train_batch_size0: 64
+  val_batch_size0: 64
+  eval_batch_size0: 64
+  workers: 4
+  persistent_workers: true
+  pin_memory: true
+image_augmentation:
+  random_resized_crop:
+    enable: true
+    interpolation: "bilinear"
+  random_horizontal_flip:
+    enable: true
+  resize:
+    enable: true
+    size: 288
+    interpolation: "bilinear"
+  center_crop:
+    enable: true
+    size: 256
+sampler:
+  name: "batch_sampler"
+  bs:
+    crop_size_width: 256
+    crop_size_height: 256
+loss:
+  category: "classification"
+  classification:
+    name: "cross_entropy"
+    cross_entropy:
+      label_smoothing: 0.1
+optim:
+  name: "adamw"
+  weight_decay: 0.01
+  no_decay_bn_filter_bias: false
+  adamw:
+    beta1: 0.9
+    beta2: 0.999
+scheduler:
+  name: "cosine"
+  is_iteration_based: false
+  max_epochs: 30
+  warmup_iterations: 100
+  warmup_init_lr: 0.00002
+  cosine:
+    max_lr: 0.0005
+    min_lr: 0.00002
+model:
+  classification:
+    name: "mobilevit"
+    pretrained: "project/checkpoints/mobilevit_xs.pt"
+    finetune_pretrained_model: true
+    n_pretrained_classes: 1000
+    classifier_dropout: 0.1
+    mit:
+      mode: "x_small"
+      ffn_dropout: 0.0
+      attn_dropout: 0.0
+      dropout: 0.1
+      number_heads: 4
+      no_fuse_local_global_features: false
+      conv_kernel_size: 3
+    activation:
+      name: "swish"
+  normalization:
+    name: "batch_norm"
+    momentum: 0.1
+  activation:
+    name: "swish"
+  layer:
+    global_pool: "mean"
+    conv_init: "kaiming_normal"
+    linear_init: "trunc_normal"
+    linear_init_std_dev: 0.02
+ema:
+  enable: true
+  momentum: 0.0005
+stats:
+  val: [ "loss", "top1", "top5" ]
+  train: ["loss"]
+  checkpoint_metric: "top1"
+  checkpoint_metric_max: true

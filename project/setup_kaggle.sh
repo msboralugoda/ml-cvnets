@@ -35,4 +35,18 @@ if [ ! -f "project/configs/mobilevit_xs_imagenet.yaml" ]; then
     wget -q https://docs-assets.developer.apple.com/ml-research/models/cvnets/classification/mobilevit_xs.yaml -O project/configs/mobilevit_xs_imagenet.yaml
 fi
 
+if [ ! -f "project/checkpoints/mobilevit_xs_no_head.pt" ]; then
+    PYTHONPATH= /kaggle/working/miniconda/envs/cvnets/bin/python -c "
+import torch
+ckpt = torch.load('project/checkpoints/mobilevit_xs.pt', map_location='cpu')
+for k in ['classifier.fc.weight', 'classifier.fc.bias']:
+    ckpt.pop(k, None)
+torch.save(ckpt, 'project/checkpoints/mobilevit_xs_no_head.pt')
+"
+fi
+
+if [ ! -d "project/data/flowers102" ]; then
+    PYTHONPATH= /kaggle/working/miniconda/envs/cvnets/bin/python project/scripts/prepare_flowers102.py
+fi
+
 echo "SETUP COMPLETE"
