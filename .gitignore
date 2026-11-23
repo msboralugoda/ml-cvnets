@@ -33,3 +33,4 @@ venv/
 trash
 *.pt
 *.pth
+project/data/
