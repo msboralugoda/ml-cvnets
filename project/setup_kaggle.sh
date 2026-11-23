@@ -49,4 +49,18 @@ if [ ! -d "project/data/flowers102" ]; then
     PYTHONPATH= /kaggle/working/miniconda/envs/cvnets/bin/python project/scripts/prepare_flowers102.py
 fi
 
+if [ ! -f "project/checkpoints/mobilenetv2_075.pt" ]; then
+    wget -q https://docs-assets.developer.apple.com/ml-research/models/cvnets-v2/classification/mobilenetv2-0.75.pt -O project/checkpoints/mobilenetv2_075.pt
+fi
+
+if [ ! -f "project/checkpoints/mobilenetv2_075_no_head.pt" ]; then
+    PYTHONPATH= /kaggle/working/miniconda/envs/cvnets/bin/python -c "
+import torch
+ckpt = torch.load('project/checkpoints/mobilenetv2_075.pt', map_location='cpu')
+for k in ['classifier.classifier_fc.weight', 'classifier.classifier_fc.bias']:
+    ckpt.pop(k, None)
+torch.save(ckpt, 'project/checkpoints/mobilenetv2_075_no_head.pt')
+"
+fi
+
 echo "SETUP COMPLETE"
