@@ -131,7 +131,7 @@ class MobileViT(BaseImageEncoder):
             "--model.classification.mit.mode",
             type=str,
             default="small",
-            choices=["xx_small", "x_small", "small"],
+            choices=["xx_small", "x_small", "small", "x_small_patch4"],
             help="MobileViT mode. Defaults to small",
         )
         group.add_argument(
