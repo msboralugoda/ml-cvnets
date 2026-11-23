@@ -22,5 +22,17 @@ if [ ! -d "/kaggle/working/miniconda/envs/cvnets" ]; then
 fi
 
 PYTHONPATH= /kaggle/working/miniconda/envs/cvnets/bin/pip install -r requirements.txt -c constraints.txt
+PYTHONPATH= /kaggle/working/miniconda/envs/cvnets/bin/pip install av
 PYTHONPATH= /kaggle/working/miniconda/envs/cvnets/bin/pip install --editable .
+
+if [ ! -f "project/checkpoints/mobilevit_xs.pt" ]; then
+    mkdir -p project/checkpoints
+    wget -q https://docs-assets.developer.apple.com/ml-research/models/cvnets/classification/mobilevit_xs.pt -O project/checkpoints/mobilevit_xs.pt
+fi
+
+if [ ! -f "project/configs/mobilevit_xs_imagenet.yaml" ]; then
+    mkdir -p project/configs
+    wget -q https://docs-assets.developer.apple.com/ml-research/models/cvnets/classification/mobilevit_xs.yaml -O project/configs/mobilevit_xs_imagenet.yaml
+fi
+
 echo "SETUP COMPLETE"
